@@ -5,6 +5,9 @@ __author__ = 'homeway'
 __email__ = 'xiaocao.grasses@gmail.com'
 __copyright__   = 'Copyright © 2017/04/27, homeway'
 
+import warnings
+warnings.filterwarnings("ignore")
+
 import sys
 sys.path.append('/usr/local/lib/python2.7/site-packages')
 
@@ -97,10 +100,10 @@ class IMG(object):
             self.build(index = i, fname = o)
 
 class svm(object):
-    def __init__(self, train = 'train', test = 'test', debug = False):
+    def __init__(self, train = 'train', test = 'test', power = {}, debug = False):
         self.debug = debug
         from sklearn.neighbors import KNeighborsClassifier
-        self.clf = SVC()
+        self.clf = KNeighborsClassifier()
         self.base = os.path.dirname(os.path.realpath(__file__))
         self.train_path = '{:s}/{:s}'.format(self.base, train)
         self.test_path = '{:s}/{:s}'.format(self.base, test)
@@ -142,11 +145,21 @@ class svm(object):
         #print('shape = ', np.array(X_list).shape)
         return np.array(X_list), y_list
 
+    def init_voter(self):
+        voter = {}
+        writers = os.listdir(self.train_path)
+        for i, writer in enumerate(writers):
+            if not os.path.isdir('{:s}/{:s}'.format(self.train_path, writer)): continue
+            voter[writer] = 0
+        return voter
+
     def run(self):
         writers = os.listdir(self.test_path)
         for i, writer in enumerate(writers):
             X = []
             y = []
+            vote = self.init_voter()
+
             tmp_path = '{:s}/{:s}'.format(self.test_path, writer)
             if not os.path.isdir(tmp_path): continue
 
@@ -164,8 +177,16 @@ class svm(object):
                     self.total = self.total + 1
                     if result[0] == writer: self.right = self.right + 1
 
+                    vote[result[0]] += 1
                     self.reality_list.append(writer)
                     self.predict_list.append(result[0])
+            # writer
+            winer = (sorted(vote.iteritems(), key = lambda d: d[1], reverse = True))[0][0]
+
+            check = 'False'
+            if winer == writer: check = 'True'
+            print('predict = {:s} real = {:s} right? = {:s}'.format(winer, writer, check))
+
 
     def show(self):
         print('=> right = {:d} total = {:d} right_rate = {:.2f}%'.format(self.right, self.total, float(100 * float(self.right) / float(self.total))))
