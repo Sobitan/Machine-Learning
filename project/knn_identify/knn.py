@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+__author__ = 'homeway'
+__email__ = 'xiaocao.grasses@gmail.com'
+__copyright__   = 'Copyright © 2017/04/25, homeway'
+
 from numpy import *
 import operator, numpy as np
 from os import listdir

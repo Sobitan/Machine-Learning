@@ -42,3 +42,4 @@ target/
 *.db
 *.log
 .idea/
+pytest/

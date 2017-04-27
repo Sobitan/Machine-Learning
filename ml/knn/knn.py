@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+__author__ = 'homeway'
+__email__ = 'xiaocao.grasses@gmail.com'
+__copyright__   = 'Copyright © 2017/04/23, homeway'
+
 from numpy import *
 import numpy as np, csv, operator, os
 
