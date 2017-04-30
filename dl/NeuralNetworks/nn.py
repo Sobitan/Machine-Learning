@@ -6,6 +6,7 @@ __email__ = 'xiaocao.grasses@gmail.com'
 __copyright__   = 'Copyright © 2017/04/30, homeway'
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 class NeuralNetwork(object):
     '''
@@ -22,6 +23,7 @@ class NeuralNetwork(object):
         '''
         generate weight matrix with random float
         '''
+        self.layers = layers
         self.weights = []
         for i in range(1, len(layers) - 1):
             self.weights.append((2 * np.random.random((layers[i - 1] + 1, layers[i] + 1)) - 1) * 0.25)
@@ -51,6 +53,7 @@ class NeuralNetwork(object):
     '''
     def fit(self, X, y, learning_rate = 0.2, epochs = 10000):
         X = np.atleast_2d(X)
+        # temp.shape=(X.shape[0], X.shape[1] + 1) `+1` is for bais, so X[*][-1] = 1 => numpy.dot(x, weights) + numpy.dot(1 * bais)
         temp = np.ones([X.shape[0], X.shape[1] + 1])
         temp[:, 0:-1] = X
         X = temp
@@ -62,24 +65,25 @@ class NeuralNetwork(object):
         for k in range(epochs):
             # select a random line from X for training
             i = np.random.randint(X.shape[0])
-            a = [X[i]]
+            x = [X[i]]
 
             # going forward network, for each layer
             for l in range(len(self.weights)):
                 # computer the node value for each layer (O_i) using activation function
-                a.append(self.activation(np.dot(a[l], self.weights[l])))
+                x.append(self.activation(np.dot(x[l], self.weights[l])))
+
             # computer the error at the top layer
-            error = y[i] - a[-1]
-            deltas = [
-                error * self.activation_deriv(a[-1])]  # For output layer, Err calculation (delta is updated error)
+            error = y[i] - x[-1]
+            deltas = [error * self.activation_deriv(x[-1])]  # For output layer, Err calculation (delta is updated error)
 
             # start backprobagation
-            for l in range(len(a) - 2, 0, -1):  # we need to begin at the second to last layer
+            for l in range(len(x) - 2, 0, -1):  # we need to begin at the second to last layer
                 # compute the updated error (i,e, deltas) for each node going from top layer to input layer
-                deltas.append(deltas[-1].dot(self.weights[l].T) * self.activation_deriv(a[l]))
+                deltas.append(deltas[-1].dot(self.weights[l].T) * self.activation_deriv(x[l]))
             deltas.reverse()
+
             for i in range(len(self.weights)):
-                layer = np.atleast_2d(a[i])
+                layer = np.atleast_2d(x[i])
                 delta = np.atleast_2d(deltas[i])
                 self.weights[i] += learning_rate * layer.T.dot(delta)
 
@@ -93,7 +97,7 @@ class NeuralNetwork(object):
         return a
 
 if __name__ == '__main__':
-    nn = NeuralNetwork(layers = [2, 2, 1], activation='tanh')
+    nn = NeuralNetwork(layers = [2, 3, 1], activation='tanh')
     X = np.array([[0, 0],
                   [0, 1],
                   [1, 0],
