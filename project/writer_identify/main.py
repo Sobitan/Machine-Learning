@@ -122,7 +122,7 @@ class Pattern(object):
         width = 0.5
         opacity = 0.4
 
-        plt.bar(index, values, linewidth = width, alpha = opacity, color = 'b', label='right rate')
+        plt.bar(index, values, linewidth = width, alpha = opacity, color = 'b', label = 'right rate')
 
         plt.xlabel('letter')
         plt.ylabel('predict rgith rate (%)')
@@ -155,6 +155,7 @@ class Pattern(object):
 if __name__ == '__main__':
     from generater import Generate
     G = Generate(split = 0.3)
+    # clear test file and generate test file
     G.recover().build()
 
     o = Pattern(debug = True)
@@ -162,4 +163,5 @@ if __name__ == '__main__':
     o.log()
     o.show()
 
+    # remove test file
     G.recover()
