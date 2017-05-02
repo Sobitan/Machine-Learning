@@ -156,7 +156,7 @@ if __name__ == '__main__':
     from generater import Generate
     G = Generate(split = 0.3)
     # clear test file and generate test file
-    G.recover().build()
+    G.recover().rander()
 
     o = Pattern(debug = True)
     o.run()

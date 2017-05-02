@@ -12,3 +12,4 @@ class Config(object):
     test_path = '{:s}/{:s}'.format(base, 'test')
     train_path = '{:s}/{:s}'.format(base, 'train')
     source_path = '{:s}/{:s}'.format(base, 'source')
+    tmp_path = '{:s}/{:s}'.format(base, 'tmp')
