@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'homeway'
+__author__ = 'grasses'
 __email__ = 'xiaocao.grasses@gmail.com'
-__copyright__   = 'Copyright © 2017/05/09, homeway'
+__copyright__   = 'Copyright © 2017/05/09, grasses'
 
 import csv, random, math
 
-class Bayes(object):
+class Bayesian(object):
     def __init__(self):
         self.dataset = []
         self.trainset = []
@@ -23,9 +23,28 @@ class Bayes(object):
         if len(numbers) - 1 == 0:
             raise ValueError('trainset not enough abundant! Each tag y has at least 2 data.')
 
-        avg = Bayes.mean(numbers)
+        avg = Bayesian.mean(numbers)
         variance = sum([pow(x - avg, 2) for x in numbers]) / float(len(numbers) - 1)
         return math.sqrt(variance)
+
+    '''
+    suppose p(xi|c) ~ N(u, pow(σ, 2)), normal distribution
+    :wikipedia  https://en.wikipedia.org/wiki/Normal_distribution
+    :return p(xi|c) float
+    '''
+    @staticmethod
+    def normal_distribution(x, c, u, sigma):
+        exponent = math.exp(-(math.pow(x - u, 2) / (2 * math.pow(sigma, 2))))
+        return (1 / (math.sqrt(2 * math.pi) * sigma)) * exponent
+
+    '''
+    suppose p(xi|c) ~ B(p), bernoulli distribution
+    :wikipedia  https://en.wikipedia.org/wiki/Bernoulli_distribution
+    :return p(xi|c) float
+    '''
+    @staticmethod
+    def bernoulli_distribution(x, c, u, sigma):
+        return pow(x, c) * pow(1 - x, 1 - c)
 
     '''
     load dataset, save in self.dataset, return self
@@ -90,14 +109,6 @@ class Bayes(object):
         return self
 
     '''
-    suppose p(xi|c) ~ N(u, pow(σ, 2)), normal distribution
-    :return p(xi|c) float   conditional probability
-    '''
-    def calculate_probability(self, x, mean, stdev):
-        exponent = math.exp(-(math.pow(x - mean, 2) / (2 * math.pow(stdev, 2))))
-        return (1 / (math.sqrt(2 * math.pi) * stdev)) * exponent
-
-    '''
     multiplied probabilities, return for example:
         probabilities = {0.0: 3.5571663857026466e-12, 1.0: 3.183595299286384e-13}
     :return probabilities   dict    {value1: probability1, value2: probability2}
@@ -106,11 +117,11 @@ class Bayes(object):
         probabilities = {}
         for class_value, class_summaries in self.summaries.iteritems():
             probabilities[class_value] = 1
-            # multiplied probabilities => P(x) = p(xi|c) (i = 0, 1, 2, 3...)
+            # multiplied probabilities => P(x) = π{p(xi|c), (i = 0, 1, 2, 3...)}
             for i in range(len(class_summaries)):
                 (mean, stdev) = class_summaries[i]
                 x = vector[i]
-                probabilities[class_value] *= self.calculate_probability(x, mean, stdev)
+                probabilities[class_value] *= self.normal_distribution(x, class_value, mean, stdev)
             # after multiplied, predict(x) = max{Pj(x)| j = 0, 1, 2...len(self.summaries) - 1}
         return probabilities
 

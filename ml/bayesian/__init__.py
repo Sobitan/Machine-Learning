@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'homeway'
+__author__ = 'grasses'
 __email__ = 'xiaocao.grasses@gmail.com'
-__copyright__   = 'Copyright © 2017/05/09, homeway'
+__copyright__   = 'Copyright © 2017/05/09, grasses'
 
 import os
-from bayes import Bayes
+from bayes import Bayesian
 
 if __name__ == '__main__':
     '''
     test datase from uci: https://archive.ics.uci.edu/ml/datasets/pima+indians+diabetes
     '''
 
-    B = Bayes()
+    B = Bayesian()
     csv_path = os.path.dirname(os.path.realpath(__file__)) + '/pima-indians-diabetes.data'
     # test() and get_accuracy()
     (trainset, testset, predictions) = B.test(csv_path=csv_path, split=0.7)
     accuracy = B.get_accuracy(predictions)
     print('=> accuracy: {:.2f}%\n').format(accuracy)
-
+    exit(1)
     # fit(X, y)
     X = [[0,1,2,3,4], [1,2,3,4,5], [2,3,4,5,6], [3,4,5,6,7]]
     y = [0,0,1,1]
