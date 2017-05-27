@@ -6,7 +6,6 @@ __email__ = 'xiaocao.grasses@gmail.com'
 __copyright__   = 'Copyright © 2017/05/01, homeway'
 
 import sys, os, numpy as np
-sys.path.append('/usr/local/lib/python2.7/site-packages')
 
 from matplotlib import pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
