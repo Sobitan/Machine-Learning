@@ -14,7 +14,7 @@ if __name__ == '__main__':
     '''
 
     B = Bayesian()
-    csv_path = os.path.dirname(os.path.realpath(__file__)) + '/pima-indians-diabetes.data'
+    csv_path = os.path.dirname(os.path.realpath(__file__)) + '/data/pima-indians-diabetes.data'
     # test() and get_accuracy()
     (trainset, testset, predictions) = B.test(csv_path=csv_path, split=0.7)
     accuracy = B.get_accuracy(predictions)
